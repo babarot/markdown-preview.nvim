@@ -28,24 +28,28 @@ gh extension install yusukebe/gh-markdown-preview
 
 ### Install the plugin
 
-Using [lazy.nvim](https://github.com/folke/lazy.nvim):
+Using [lazy.nvim](https://github.com/folke/lazy.nvim) (recommended):
 
 ```lua
+-- Simple setup
 {
   'babarot/markdown-preview.nvim',
   ft = 'markdown',
-  config = function()
-    -- Optional: Configure the plugin
-    require('markdown-preview').setup({
-      -- The gh extension command name (change if you've aliased it differently)
-      gh_cmd = 'markdown-preview',  -- default value
-    })
+}
 
-    -- Optional: Set up keymaps
-    vim.keymap.set('n', '<leader>mp', '<cmd>MarkdownPreview<cr>', { desc = 'Markdown Preview' })
-    vim.keymap.set('n', '<leader>ms', '<cmd>MarkdownPreviewStop<cr>', { desc = 'Markdown Preview Stop' })
-    vim.keymap.set('n', '<leader>mt', '<cmd>MarkdownPreviewToggle<cr>', { desc = 'Markdown Preview Toggle' })
-  end,
+-- Or with custom configuration
+{
+  'babarot/markdown-preview.nvim',
+  ft = 'markdown',
+  opts = {
+    -- Only needed if you've renamed/aliased the gh extension command
+    -- gh_cmd = 'md',  -- e.g., if you aliased 'gh markdown-preview' to 'gh md'
+  },
+  keys = {
+    { '<leader>mp', '<cmd>MarkdownPreview<cr>', desc = 'Markdown Preview' },
+    { '<leader>ms', '<cmd>MarkdownPreviewStop<cr>', desc = 'Markdown Preview Stop' },
+    { '<leader>mt', '<cmd>MarkdownPreviewToggle<cr>', desc = 'Markdown Preview Toggle' },
+  },
 }
 ```
 
@@ -94,25 +98,33 @@ Stop the markdown preview server.
 
 Toggle the markdown preview server. Accepts the same options as `:MarkdownPreview`.
 
-## Configuration
+## Configuration (Optional)
 
-You can configure the plugin using the `setup()` function:
+By default, the plugin works out of the box with no configuration needed. It uses `gh markdown-preview` command.
+
+If you've renamed or aliased the gh extension command, you can configure it:
+
+#### Using lazy.nvim `opts`:
+
+```lua
+{
+  'babarot/markdown-preview.nvim',
+  ft = 'markdown',
+  opts = {
+    gh_cmd = 'your-custom-alias',  -- Only needed if you've aliased the command
+  },
+}
+```
+
+#### Using setup() function:
 
 ```lua
 require('markdown-preview').setup({
-  -- The gh extension command name
-  -- Change this if you've aliased the gh-markdown-preview extension differently
-  -- Default: 'markdown-preview'
-  gh_cmd = 'markdown-preview',
+  gh_cmd = 'your-custom-alias',  -- Default: 'markdown-preview'
 })
 ```
 
-### Why is this configurable?
-
-The gh extension command name can vary depending on how users have installed or aliased it:
-- Default installation: `gh markdown-preview` (full name)
-- Some users may have: `gh md` (short alias)
-- Custom aliases are also possible
+**Note**: Most users don't need to configure anything. Only set `gh_cmd` if you've created a custom alias for the gh extension.
 
 ### Lua API
 
@@ -146,16 +158,6 @@ markdown_preview.toggle()
 if markdown_preview.is_running() then
   print('Preview is running')
 end
-```
-
-### Recommended Keymaps
-
-Add these to your Neovim configuration:
-
-```lua
-vim.keymap.set('n', '<leader>mp', '<cmd>MarkdownPreview<cr>', { desc = 'Markdown Preview' })
-vim.keymap.set('n', '<leader>ms', '<cmd>MarkdownPreviewStop<cr>', { desc = 'Markdown Preview Stop' })
-vim.keymap.set('n', '<leader>mt', '<cmd>MarkdownPreviewToggle<cr>', { desc = 'Markdown Preview Toggle' })
 ```
 
 ## How It Works
