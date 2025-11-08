@@ -3,6 +3,19 @@ local M = {}
 -- Store the process object for the preview server
 local preview_process = nil
 
+-- Default configuration
+M.config = {
+  -- The gh extension command name (default: 'markdown-preview')
+  -- Users can change this if they've aliased the extension differently
+  gh_cmd = 'markdown-preview',
+}
+
+--- Setup function to configure the plugin
+--- @param opts table|nil Configuration options
+function M.setup(opts)
+  M.config = vim.tbl_deep_extend('force', M.config, opts or {})
+end
+
 --- Start the markdown preview server
 --- @param opts table|nil Options for the preview server
 function M.start(opts)
@@ -30,7 +43,7 @@ function M.start(opts)
   end
 
   -- Build the command
-  local cmd = { 'gh', 'markdown-preview', filepath }
+  local cmd = { 'gh', M.config.gh_cmd, filepath }
 
   -- Add options
   if opts.dark_mode then
